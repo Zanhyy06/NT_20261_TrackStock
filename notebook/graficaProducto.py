@@ -14,10 +14,10 @@ def crear_ruta_si_no_existe(ruta_destino):
     os.makedirs(ruta_destino, exist_ok=True)
 
 
-def graficar_barras(datos_agrupados, columna_categorias, columna_valores,
-                    titulo="Gráfico de usuarios", color_barras="#4CAF50",
-                    nombre_archivo="barras.png", ruta_destino=RUTA_ASSETS):
-
+def graficar_barras_productos(datos_agrupados, columna_categorias, columna_valores,
+                               titulo="Gráfico de productos", color_barras="#2196F3",
+                               nombre_archivo="barras_productos.png", ruta_destino=RUTA_ASSETS):
+    # Gráfico de barras vertical - cantidad de productos por categoría
     crear_ruta_si_no_existe(ruta_destino)
     figura, area_dibujo = plt.subplots(figsize=(10, 5))
 
@@ -36,33 +36,28 @@ def graficar_barras(datos_agrupados, columna_categorias, columna_valores,
     ruta_completa = os.path.join(ruta_destino, nombre_archivo)
     figura.savefig(ruta_completa)
     plt.close(figura)
-    print(f"Gráfico de barras guardado en: {ruta_completa}")
+    print(f"Gráfico de barras productos guardado en: {ruta_completa}")
 
 
-def graficar_torta(datos_agrupados, columna_etiquetas, columna_valores,
-                   titulo="Gráfico de empleados", lista_colores=None,
-                   nombre_archivo="torta.png", ruta_destino=RUTA_ASSETS):
-
+def graficar_barras_horizontal(datos_agrupados, columna_categorias, columna_valores,
+                                titulo="Gráfico horizontal", color_barras="#FF9800",
+                                nombre_archivo="barras_horizontal.png", ruta_destino=RUTA_ASSETS):
+    # Gráfico de barras horizontal - promedio de precios por categoría
     crear_ruta_si_no_existe(ruta_destino)
+    figura, area_dibujo = plt.subplots(figsize=(10, 5))
 
-    if lista_colores is None:
-        lista_colores = ["#FF9800", "#2196F3", "#4CAF50", "#E91E63", "#9C27B0"]
-
-    figura, area_dibujo = plt.subplots(figsize=(8, 8))
-    cantidad_categorias = len(datos_agrupados)
-
-    area_dibujo.pie(
+    area_dibujo.barh(
+        datos_agrupados[columna_categorias],
         datos_agrupados[columna_valores],
-        labels=datos_agrupados[columna_etiquetas],
-        autopct="%1.1f%%",
-        colors=lista_colores[:cantidad_categorias],
-        startangle=90,
-        wedgeprops={"edgecolor": "black", "linewidth": 0.5}
+        color=color_barras,
+        edgecolor="black"
     )
     area_dibujo.set_title(titulo, fontsize=14)
+    area_dibujo.set_xlabel(columna_valores, fontsize=12)
+    area_dibujo.set_ylabel(columna_categorias, fontsize=12)
     plt.tight_layout()
 
     ruta_completa = os.path.join(ruta_destino, nombre_archivo)
     figura.savefig(ruta_completa)
     plt.close(figura)
-    print(f"Gráfico de torta guardado en: {ruta_completa}")
+    print(f"Gráfico horizontal guardado en: {ruta_completa}")

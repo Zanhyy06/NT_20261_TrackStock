@@ -13,6 +13,10 @@ from notebook.HU1_limpiezaDetalleMovimientoInventario import limpiar_datos_detal
 from notebook.HU1_limpiezaUsuario import limpiar_usuarios
 from notebook.HU2_1_limpiezaProductos import limpiar_productos
 
+#zona para importar transformaciones
+from notebook.transformacionUsuario import transformar_usuario
+from notebook.transformacionProductos import transformar_productos
+from notebook.transformacionMovimientoInventario import transformar_movimiento_inventario
 
 #Creando las simulaciones
 simulaciones = generar_movimientos(10)
@@ -38,3 +42,8 @@ print(simulacion_usuarios_limpias)
 print(simulaciones_limpias)
 print(simulaciones_detalle_limpias)
 print(simulacion_productos_limpias)
+
+
+transformar_usuario(simulacion_usuarios_limpias)
+transformar_productos(simulacion_productos_limpias)
+transformar_movimiento_inventario(simulaciones_limpias)

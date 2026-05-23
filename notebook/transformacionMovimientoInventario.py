@@ -1,24 +1,32 @@
 import pandas as pd
 
+from notebook.graficoMovimientoInventario import graficar_linea_movimientos, graficar_torta_tipo
+
+
 def transformar_movimiento_inventario(data_frame_limpio):
     print("Transformando el DataFrame de movimiento de inventario...")
+    print("Columnas:", data_frame_limpio.columns.tolist())
 
     # 1. Cantidad de movimientos por fecha (útil para gráficos de líneas)
-    filtro1 = data_frame_limpio.query("id_movimiento > 0")
+    filtro1 = data_frame_limpio[data_frame_limpio["fecha"].dt.year > 1900]
     agrupacion1 = filtro1.groupby("fecha")["id_movimiento"].count().reset_index(name="cantidad_movimientos")
     print(agrupacion1)
+    graficar_linea_movimientos(
+        datos_agrupados=agrupacion1,
+        columna_fecha="fecha",
+        columna_valores="cantidad_movimientos",
+        titulo="Cantidad de movimientos por fecha",
+        color_linea="#2196F3",
+        nombre_archivo="movimientos_por_fecha.png"
+    )
 
     # 2. Cantidad de movimientos por tipo (útil para gráficos de barras o pastel)
-    filtro2 = data_frame_limpio.query("tipo == 'entrada'")
-    agrupacion2 = filtro2.groupby("tipo")["id_movimiento"].count().reset_index(name="cantidad")
+    agrupacion2 = data_frame_limpio.groupby("tipo")["id_movimiento"].count().reset_index(name="cantidad")
     print(agrupacion2)
-    
-    # 3. Movimientos realizados por usuario (útil para gráficos horizontales)
-    filtro3 = data_frame_limpio.query("id_usuario > 0")
-    agrupacion3 = filtro3.groupby("id_usuario")["id_movimiento"].count().reset_index(name="total_movimientos")
-    print(agrupacion3)
-
-    # 4. Cantidad de movimientos por fecha y tipo (útil para gráficos de líneas múltiples)
-    filtro4 = data_frame_limpio.query("id_movimiento >= 100")
-    agrupacion4 = filtro4.groupby(["fecha", "tipo"])["id_movimiento"].count().reset_index(name="cantidad")
-    print(agrupacion4)
+    graficar_torta_tipo(
+        datos_agrupados=agrupacion2,
+        columna_etiquetas="tipo",
+        columna_valores="cantidad",
+        titulo="Distribución de movimientos por tipo",
+        nombre_archivo="movimientos_por_tipo.png"
+    )

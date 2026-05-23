@@ -6,7 +6,6 @@ import seaborn as sns
 # Se importa os para manejar rutas y crear carpetas
 import os
 
-# Ruta típica de la carpeta assets en un proyecto React con Vite
 RUTA_ASSETS = r"C:\Users\Santhy\Music\Proyecto cesde\Proyecto-gestion-de-inventario\src\assets\graficos"
 
 
@@ -14,21 +13,22 @@ def crear_ruta_si_no_existe(ruta_destino):
     os.makedirs(ruta_destino, exist_ok=True)
 
 
-def graficar_barras(datos_agrupados, columna_categorias, columna_valores,
-                    titulo="Gráfico de usuarios", color_barras="#4CAF50",
-                    nombre_archivo="barras.png", ruta_destino=RUTA_ASSETS):
-
+def graficar_linea_movimientos(datos_agrupados, columna_fecha, columna_valores,
+                                titulo="Movimientos por fecha", color_linea="#2196F3",
+                                nombre_archivo="linea_movimientos.png", ruta_destino=RUTA_ASSETS):
     crear_ruta_si_no_existe(ruta_destino)
-    figura, area_dibujo = plt.subplots(figsize=(10, 5))
+    figura, area_dibujo = plt.subplots(figsize=(12, 5))
 
-    area_dibujo.bar(
-        datos_agrupados[columna_categorias],
+    area_dibujo.plot(
+        datos_agrupados[columna_fecha],
         datos_agrupados[columna_valores],
-        color=color_barras,
-        edgecolor="black"
+        color=color_linea,
+        marker="o",
+        linewidth=2,
+        markersize=6
     )
     area_dibujo.set_title(titulo, fontsize=14)
-    area_dibujo.set_xlabel(columna_categorias, fontsize=12)
+    area_dibujo.set_xlabel(columna_fecha, fontsize=12)
     area_dibujo.set_ylabel(columna_valores, fontsize=12)
     plt.xticks(rotation=45)
     plt.tight_layout()
@@ -36,17 +36,16 @@ def graficar_barras(datos_agrupados, columna_categorias, columna_valores,
     ruta_completa = os.path.join(ruta_destino, nombre_archivo)
     figura.savefig(ruta_completa)
     plt.close(figura)
-    print(f"Gráfico de barras guardado en: {ruta_completa}")
+    print(f"Gráfico de línea guardado en: {ruta_completa}")
 
 
-def graficar_torta(datos_agrupados, columna_etiquetas, columna_valores,
-                   titulo="Gráfico de empleados", lista_colores=None,
-                   nombre_archivo="torta.png", ruta_destino=RUTA_ASSETS):
-
+def graficar_torta_tipo(datos_agrupados, columna_etiquetas, columna_valores,
+                         titulo="Movimientos por tipo", lista_colores=None,
+                         nombre_archivo="torta_tipo.png", ruta_destino=RUTA_ASSETS):
     crear_ruta_si_no_existe(ruta_destino)
 
     if lista_colores is None:
-        lista_colores = ["#FF9800", "#2196F3", "#4CAF50", "#E91E63", "#9C27B0"]
+        lista_colores = ["#4CAF50", "#F44336", "#2196F3", "#FF9800"]
 
     figura, area_dibujo = plt.subplots(figsize=(8, 8))
     cantidad_categorias = len(datos_agrupados)
